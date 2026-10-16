@@ -111,8 +111,14 @@ export const parseAccount = ({ id, attributes: a }) => ({
  * A budget: what was spent in the period of its limit covering today (the
  * month for most), or this month when it has no limit.
  */
-export function parseBudget({ id, attributes: a }, limits) {
-  const own = limits.filter((limit) => String(limit.attributes.budget_id) === String(id));
+export function parseBudget({ id, attributes: a }, limits, today) {
+  // The request also returns a limit that starts tomorrow (the last day of a
+  // period, checked on Firefly III 6.7.9): only the one covering today counts.
+  const own = limits.filter(
+    (limit) =>
+      String(limit.attributes.budget_id) === String(id) &&
+      (!today || (dayOf(limit.attributes.start) <= today && today <= dayOf(limit.attributes.end))),
+  );
   // A budget may have one limit per currency: the one of the budget wins.
   const chosen =
     own.find((limit) => limit.attributes.currency_code === a.currency_code) ?? own[0] ?? null;
@@ -232,6 +238,10 @@ export class FireflyClient {
     if (response.status === 401 || response.status === 403) {
       throw new UnauthorizedError(`Firefly III refused the token (HTTP ${response.status})`);
     }
+    if ((response.status >= 300 && response.status < 400) || response.status === 404) {
+      // A redirection (http → https behind a proxy) or another path than Firefly III's.
+      throw new NotFireflyError(`Firefly III answered HTTP ${response.status}: not its API`);
+    }
     if (response.status !== 200) {
       throw new UnreachableError(`Firefly III answered HTTP ${response.status}`, response.status);
     }
@@ -283,7 +293,7 @@ export class FireflyClient {
     return {
       version,
       accounts: accounts.filter(active).map(parseAccount),
-      budgets: budgets.filter(active).map((budget) => parseBudget(budget, limits)),
+      budgets: budgets.filter(active).map((budget) => parseBudget(budget, limits, today)),
       bills: bills.filter(active).map(parseBill),
       piggyBanks: piggyBanks.filter(active).map(parsePiggyBank),
       summaries: Object.values(parseSummary(summary)),

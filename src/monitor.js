@@ -158,6 +158,11 @@ export class Monitor {
 
   /** Reconnection: Gladys may have restarted, publish everything again. */
   async resync(config) {
+    if (connectionOf(config) !== connectionOf(this.config)) {
+      // The configuration changed while Gladys was away.
+      await this.reconfigure(config);
+      return;
+    }
     this.config = config;
     this.discovered = null;
     await this.publishDiscovered();
@@ -173,6 +178,12 @@ export class Monitor {
     this.problem = null;
     this.failing.delete('firefly');
     logger.info('Configuration saved');
+    if (connectionOf(config) !== connectionOf(this.config)) {
+      // Another server or user: its data must not be shown under the old one.
+      this.snapshot = null;
+      this.signature = null;
+      this.lastSuccessAt = null;
+    }
     this.configure(config);
     // The language may have changed: the names of the next devices with it.
     this.discovered = null;
@@ -407,10 +418,15 @@ export class Monitor {
     const records = this.data.budgets;
     const seen = new Set();
     for (const { type, item: budget, ids } of this.entries()) {
-      if (type !== DEVICE_TYPES.BUDGET || budget.percent === null) {
+      if (type !== DEVICE_TYPES.BUDGET) {
         continue;
       }
+      // Kept while its limit is missing for a while (an auto-budget created by
+      // the cron of Firefly III after midnight): the levels reached stay known.
       seen.add(budget.id);
+      if (budget.percent === null) {
+        continue;
+      }
       const reached = Math.max(0, ...LEVELS.filter((level) => budget.percent >= level));
       const record = records[budget.id];
       if (!record) {
@@ -519,6 +535,10 @@ export class Monitor {
     }
   }
 }
+
+/** What identifies the server and the reading pace of a configuration. */
+const connectionOf = (config) =>
+  config && JSON.stringify([config.url, config.token, config.insecure, config.refreshMinutes]);
 
 /** The STATUS key of a failed reading. */
 export function problemOf(err) {

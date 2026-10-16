@@ -302,3 +302,60 @@ test('a page beyond the first is read', async (t) => {
     4,
   );
 });
+
+test('the last day of a period, the limit of the next one is ignored', async (t) => {
+  const api = createApi();
+  // Recorded on 6.7.9: asked on 31/10, Firefly III also returns the November limit.
+  const next = structuredClone(api.body('budget-limits').data[0]);
+  Object.assign(next.attributes, {
+    start: '2026-11-01T00:00:00+01:00',
+    end: '2026-11-30T23:59:59+01:00',
+    amount: '420.00',
+    spent: [],
+  });
+  api.body('budget-limits').data.unshift(next);
+  const w = await world(t, { api });
+  await createAll(w, (device) => device.external_id.endsWith(':budget:1'));
+  assert.equal(last(w, 'budget', 1, 'limit'), 400);
+  assert.equal(last(w, 'budget', 1, 'spent'), 382.55);
+});
+
+test('a budget without limit for a while keeps the levels it reached', async (t) => {
+  const w = await world(t);
+  await createAll(w, (device) => device.external_id.endsWith(':budget:1'));
+  const limits = w.api.body('budget-limits');
+  const saved = limits.data.shift();
+  await cycle(w);
+  limits.data.unshift(saved);
+  await cycle(w);
+  assert.equal(events(w, 'budget_threshold').length, 0);
+  saved.attributes.spent[0].sum = '-400.00';
+  await cycle(w);
+  assert.deepEqual(
+    events(w, 'budget_threshold').map((e) => e.data.level),
+    ['100'],
+  );
+});
+
+test('"Update" in the Discover tab publishes the states again', async (t) => {
+  const w = await world(t);
+  const [device] = await createAll(w, (d) => d.external_id.endsWith(':account:1'));
+  const before = w.fake.states.length;
+  await w.fake.deviceUpdated(device);
+  assert.equal(w.fake.states.length, before + 1);
+});
+
+test('a redirection is not taken for a server down', async (t) => {
+  const api = createApi();
+  api.down = 301;
+  const w = await world(t, { api });
+  assert.match(w.fake.connectionStatus.message.en, /does not answer like the API/);
+});
+
+test('another server: the data of the previous one is dropped', async (t) => {
+  const w = await world(t);
+  assert.ok(w.monitor.snapshot);
+  w.api.down = 'network';
+  await w.fake.configUpdated({ ...CONFIG, url: 'http://192.0.2.99:8080' });
+  assert.equal(w.monitor.snapshot, null);
+});

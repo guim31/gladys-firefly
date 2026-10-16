@@ -72,11 +72,15 @@ export function budgetItem(budget, language) {
       text: formatPercent(budget.percent, language),
       color: budgetColor(budget.percent),
     };
-    const [start, end] = budget.period.split('/');
+    const [start, end] = (budget.period ?? '').split('/');
     item.description = [
       `${t(TEXT.left, language)}${colon}${formatAmount(budget.left, budget.currency, language)}`,
-      `${t(TEXT.period, language)}${colon}${formatDay(start, language)} → ${formatDay(end, language)}`,
-    ].join('\n');
+      /^\d{4}-\d{2}-\d{2}$/.test(start) && /^\d{4}-\d{2}-\d{2}$/.test(end)
+        ? `${t(TEXT.period, language)}${colon}${formatDay(start, language)} → ${formatDay(end, language)}`
+        : null,
+    ]
+      .filter(Boolean)
+      .join('\n');
   }
   return item;
 }

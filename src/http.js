@@ -57,6 +57,15 @@ export function httpRequest(url, { headers = {}, insecure = false, timeoutMs = 1
         response.on('error', reject);
       },
     );
+    // `timeout` is socket inactivity only: a server trickling bytes would hold
+    // a cycle forever without this overall deadline.
+    const deadline = setTimeout(() => {
+      const error = new Error(`Timed out after ${timeoutMs} ms`);
+      error.code = 'ETIMEDOUT';
+      request.destroy(error);
+    }, timeoutMs);
+    deadline.unref?.();
+    request.on('close', () => clearTimeout(deadline));
     request.on('timeout', () => {
       const error = new Error(`Timed out after ${timeoutMs} ms`);
       error.code = 'ETIMEDOUT';
