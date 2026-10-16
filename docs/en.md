@@ -1,61 +1,146 @@
-# Demo Devices Template
+# Firefly III
 
-This is the user documentation of the integration. Gladys re-hosts this file
-and shows a permanent **Documentation** link to it in the Configuration screen
-(in the user's language, with English as the fallback) — it is when
-configuring that the user needs it most. Keep the short onboarding hints in
-the `section` blocks of the manifest `config_schema`; put the long
-step-by-step (screenshots, troubleshooting…) here.
+Bring your personal finances into Gladys: the balances of your accounts, how your budgets of the month are
+doing, the bills coming up and your piggy banks, read from your own
+[Firefly III](https://www.firefly-iii.org), the self-hosted personal finance manager.
+
+The integration only reads: it never writes to Firefly III, never creates a transaction. It talks to your
+Firefly III directly on your network, with a personal access token. Not affiliated with Firefly III.
 
 ## What you get
 
-Six demo devices show up after installation: a weather station (real data
-from Open-Meteo), a switch, a dimmable light, a smart plug with power
-metering, a motion sensor and a camera.
+- One **device per asset account** (checking, savings, credit card…): its balance, in the currency of the
+  account, with its history.
+- One **device per budget**: spent, budgeted, left and share used in the period of the budget (the month,
+  usually).
+- One **device per bill** (subscription): expected amount, days until the next due date, and that date.
+- One **device per piggy bank**: saved, target and progress.
+- One **summary device per currency**: net worth, spent and earned this month, left to spend, bills still to
+  pay.
+- A **dashboard widget**: the balances of your accounts and the budgets of the month.
+- Two **scene triggers**: a bill due in a few days, a budget reaching 50, 75, 90 or 100 %.
+- Three **scene actions**: read the balances, the budgets or the next bills, as a sentence to send by message
+  or have read aloud.
+
+## Requirements
+
+- Gladys Assistant 5.1 or later.
+- Firefly III 6 or later (tested with 6.7.9), reachable from the Gladys host (same network, VPN or a public
+  address).
+- A personal access token of Firefly III.
 
 ## Configuration
 
-1. Open the **Configuration** tab of the integration.
-2. Set the **latitude** and **longitude** the demo weather station should
-   observe (they default to Paris), and pick your temperature unit.
-   The **refresh interval** sets how often the weather station and the
-   plug's power are read: every 5 minutes by default, every minute at most.
-3. Save: the devices appear in the **Discovery** tab, ready to be added.
+### Creating a personal access token
 
-The **Prefer the local connection** toggle drives the demo plug: it reports
-the channel it actually uses as a badge (local or cloud), with an orange dot
-when it runs degraded (local refused, cloud fallback).
+1. In Firefly III, open **Options → Profile**, tab **OAuth**.
+2. Under **Personal access tokens**, click **Create new token**, give it a name (`Gladys`) and confirm.
+3. Copy the token shown: Firefly III shows it only once. It is long, copy it whole.
 
-## Actions
+The token gives access to the whole account of its user: keep it as secret as your password. Revoke it from
+the same page to cut the access.
 
-- **Test the weather provider** — performs a live request to Open-Meteo and
-  shows the current temperature and humidity under the button.
-- **Identify a device** — pick one of your devices in the list and it will
-  signal itself (the demo light "blinks" in the logs).
+### Settings
 
-## Scenes
+| Setting                          | What it does                                                                                      |
+| -------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Address of Firefly III           | The address you open Firefly III with, e.g. `http://192.168.1.20:8080` or `https://money.my.home` |
+| Personal access token            | The token created above                                                                           |
+| Accept a self-signed certificate | Only for an `https` address whose certificate you made yourself                                   |
+| Refresh interval                 | 5, 10, 15 (default), 30 or 60 minutes                                                             |
+| Language of the texts            | Names of the features (at their creation) and sentences of the scenes                             |
 
-The integration adds its own cards to the scene editor (Gladys 5.1 or
-later), under the **Integrations** category:
+Save, then click **Test the connection**: the answer gives the version of Firefly III and how many accounts,
+budgets, bills and piggy banks it holds. Then open the **Discover** tab and add the devices you want in Gladys.
+**Only the devices added are followed**: their states, the widget, the triggers and the actions only cover
+them.
 
-- **Motion detected** (trigger) — starts the scene when a demo motion sensor
-  sees something move. Optionally pick the sensor and what moved (person,
-  animal); left empty, any detection matches. The following actions can
-  read what moved with `{{triggerEvent.data.target}}`.
-- **Identify a device** (action) — makes the chosen device signal itself.
-  It returns whether the device could signal itself, so the following
-  actions can depend on it.
+## Devices
 
-## Dashboard
+| Device     | Features                                                                          |
+| ---------- | --------------------------------------------------------------------------------- |
+| Account    | Balance (negative for a credit card in debt)                                      |
+| Budget     | Spent, Budgeted, Left (negative when exceeded), Budget used (%)                   |
+| Bill       | Expected amount (average of minimum and maximum), Days until due, Next due date   |
+| Piggy bank | Saved, Target, Progress (%)                                                       |
+| Summary    | Net worth, Spent this month, Earned this month, Left to spend, Bills still to pay |
 
-Add the **Demo status** widget to a dashboard: it shows the live
-temperature of the weather station and the power of the office plug, the
-connection the plug currently uses (orange when degraded) and the observed
-location. Its **Identify the light** button makes the demo light signal
-itself.
+Amounts in euros, dollars or pounds show their unit; another currency is added to the device name
+(`Savings (CHF)`). Only active accounts, budgets and bills are listed. A budget without amount for the
+current period only gives what was spent this month. The budget period is the one of its amount in Firefly III
+(a week, a month…).
+
+To be warned when a balance falls under a threshold, use the standard trigger of Gladys **"Device state change"**
+on the **Balance** of the account, with the condition "less": no need for a trigger of the integration.
+
+## Dashboard widget
+
+**Firefly III overview** shows the accounts added in Gladys with their balance (red when negative), then the
+budgets added (8 at most) with what was spent of their amount and the share used: green under 75 %, orange
+under 100 %, red beyond. Tap a budget to see what is left and its period. The footer gives the time of the
+last reading.
+
+## Scene triggers
+
+- **Firefly III: bill due soon**: a bill added in Gladys is expected today, tomorrow, in 2, 3 or 7 days
+  (choose one). It fires once per bill and due date, on that day. Variables: name of the bill, expected
+  amount, currency, due date (YYYY-MM-DD) and a ready-made sentence.
+- **Firefly III: budget level reached**: the spending of a budget added in Gladys reaches 50, 75, 90 or 100 %
+  of its amount (100 %: used up or exceeded). It fires once per level and per period. The level already
+  reached when the budget is first read is the starting point and fires nothing. Variables: name, spent,
+  budgeted, share used (%), currency and a sentence.
+
+What was fired is kept in the integration's data: a restart fires nothing twice.
+
+## Scene actions
+
+- **Firefly III: read the balances**: the balance of every account added, in one sentence. Outputs: `text`,
+  `count`.
+- **Firefly III: read the budgets**: what every budget added has spent of its amount. Outputs: `text`,
+  `count`, `over_count` (budgets used up or exceeded).
+- **Firefly III: read the next bills**: the bills added expected within 7, 14 or 31 days, nearest first.
+  Outputs: `text`, `count`.
+
+An action reads Firefly III again when the last reading is older than the refresh interval.
+
+## Scene examples
+
+- **Reminder before a bill**: trigger "bill due soon", 3 days, on the rent; action: send a message with
+  `{{triggerEvent.data.text}}`.
+- **Groceries budget almost spent**: trigger "budget level reached", 90 %, on the groceries budget; action:
+  notify the family on Telegram.
+- **Monday morning brief**: every Monday at 8 am, action "read the budgets", then have
+  `{{output.text}}` read aloud by the speaker of the kitchen.
+
+## Privacy and data
+
+- The integration reads Firefly III and never writes to it.
+- The token is stored by Gladys like any secret setting, and never written to the logs.
+- The logs never hold an amount, a name of account, budget or bill, an IBAN or the address of Firefly III,
+  even at debug level: only counts, identifiers and levels.
+- No IBAN or account number is put in Gladys. Account and budget names become device names, which you can
+  rename.
+- The integration's data volume only keeps which triggers were fired (identifiers, dates and levels).
 
 ## Troubleshooting
 
-The integration logs everything it does: check the integration logs from the
-Gladys UI (or `docker logs` on the host) with `LOG_LEVEL=debug` for the full
-detail.
+| Message                                       | What to do                                                                                      |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Firefly III refuses the token                 | The token was revoked or copied partly: create a new one                                        |
+| Firefly III does not answer                   | Check the address from the Gladys host (port, `http`/`https`), and that Firefly III is up       |
+| The certificate of Firefly III is not trusted | Use the `http` address on your network, or enable "Accept a self-signed certificate"            |
+| This address does not answer like the API     | The address leads to another page (a login portal, a reverse proxy): give Firefly III's own one |
+| A device has no value                         | Add it in the Discover tab: only the devices added are followed                                 |
+
+The logs of the integration (Integrations → Firefly III → logs) say what happened; set `LOG_LEVEL=debug` for
+more detail.
+
+## Limits
+
+- Read only: no transaction can be created from Gladys.
+- One Firefly III, one user (the one of the token).
+- Overdue bills are not reported: only the next expected date counts.
+- Amounts of other currencies are not converted; the summary has one device per currency.
+- The values follow the refresh interval: a transaction appears in Gladys at the next reading.
+- Tested against a real Firefly III 6.7.9 in Docker, not yet on a Gladys installation with real accounts:
+  feedback welcome.

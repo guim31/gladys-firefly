@@ -1,0 +1,174 @@
+{
+  "data": [
+    {
+      "type": "piggy-banks",
+      "id": "1",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:34+02:00",
+        "updated_at": "2026-10-16T15:43:34+02:00",
+        "name": "Vacances",
+        "percentage": 40,
+        "start_date": "2026-09-01T00:00:00+02:00",
+        "target_date": "2027-06-30T00:00:00+02:00",
+        "order": 1,
+        "active": true,
+        "notes": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "accounts": [
+          {
+            "account_id": "3",
+            "name": "Livret A",
+            "current_amount": "600.00",
+            "pc_current_amount": "0"
+          }
+        ],
+        "object_has_currency_setting": true,
+        "currency_id": "1",
+        "currency_name": "Euro",
+        "currency_code": "EUR",
+        "currency_symbol": "€",
+        "currency_decimal_places": 2,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "target_amount": "1500.00",
+        "pc_target_amount": null,
+        "current_amount": "600.00",
+        "pc_current_amount": "0.00",
+        "left_to_save": "900.000000000000",
+        "pc_left_to_save": null,
+        "save_per_month": "100.00",
+        "pc_save_per_month": "0"
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/piggy-banks/1",
+        "0": {
+          "rel": "self",
+          "uri": "/piggy-banks/1"
+        }
+      }
+    },
+    {
+      "type": "piggy-banks",
+      "id": "2",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:41+02:00",
+        "updated_at": "2026-10-16T15:43:41+02:00",
+        "name": "Vélo",
+        "percentage": 100,
+        "start_date": "2026-09-01T00:00:00+02:00",
+        "target_date": null,
+        "order": 2,
+        "active": true,
+        "notes": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "accounts": [
+          {
+            "account_id": "3",
+            "name": "Livret A",
+            "current_amount": "300.00",
+            "pc_current_amount": "0"
+          }
+        ],
+        "object_has_currency_setting": true,
+        "currency_id": "1",
+        "currency_name": "Euro",
+        "currency_code": "EUR",
+        "currency_symbol": "€",
+        "currency_decimal_places": 2,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "target_amount": "300.00",
+        "pc_target_amount": null,
+        "current_amount": "300.00",
+        "pc_current_amount": "0.00",
+        "left_to_save": "0.000000000000",
+        "pc_left_to_save": null,
+        "save_per_month": "0",
+        "pc_save_per_month": "0"
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/piggy-banks/2",
+        "0": {
+          "rel": "self",
+          "uri": "/piggy-banks/2"
+        }
+      }
+    },
+    {
+      "type": "piggy-banks",
+      "id": "3",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:41+02:00",
+        "updated_at": "2026-10-16T15:43:41+02:00",
+        "name": "Fonds urgence",
+        "percentage": null,
+        "start_date": "2026-09-01T00:00:00+02:00",
+        "target_date": null,
+        "order": 3,
+        "active": true,
+        "notes": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "accounts": [
+          {
+            "account_id": "3",
+            "name": "Livret A",
+            "current_amount": "100.00",
+            "pc_current_amount": "0"
+          }
+        ],
+        "object_has_currency_setting": true,
+        "currency_id": "1",
+        "currency_name": "Euro",
+        "currency_code": "EUR",
+        "currency_symbol": "€",
+        "currency_decimal_places": 2,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "target_amount": null,
+        "pc_target_amount": null,
+        "current_amount": "100.00",
+        "pc_current_amount": "0.00",
+        "left_to_save": null,
+        "pc_left_to_save": null,
+        "save_per_month": "0",
+        "pc_save_per_month": "0"
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/piggy-banks/3",
+        "0": {
+          "rel": "self",
+          "uri": "/piggy-banks/3"
+        }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 3,
+      "count": 3,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 1
+    }
+  },
+  "links": {
+    "self": "http://192.0.2.10:8080/api/v1/piggy-banks?limit=50&page=1",
+    "first": "http://192.0.2.10:8080/api/v1/piggy-banks?limit=50&page=1",
+    "last": "http://192.0.2.10:8080/api/v1/piggy-banks?limit=50&page=1"
+  }
+}

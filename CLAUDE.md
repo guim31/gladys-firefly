@@ -16,8 +16,8 @@ its only runtime dependency. It started from the official JavaScript template.
 ```bash
 npm install
 npm test                                  # node --test, the built-in runner
-node --test test/devices.test.js          # one file
-node --test --test-name-pattern "plug"    # tests whose name matches
+node --test test/monitor.test.js          # one file
+node --test --test-name-pattern "bill"    # tests whose name matches
 npm run lint                              # ESLint
 npm run format:check                      # Prettier, as the CI runs it
 npm run format                            # Prettier, fix in place
@@ -32,15 +32,20 @@ pushing.
 
 ```
 index.js                          SDK wiring only: handlers registered before connect()
-src/devices/index.js              registry of the device blueprints + dispatch helpers
-src/devices/<type>.js             one device type per file (buildDevice, onPoll, onSetValue...)
-src/scenes.js                     scene action handlers (manifest `scene_actions`)
-src/widgets.js                    dashboard widget handlers (manifest `widgets`)
+src/app.js                        registers every SDK handler on a GladysIntegration (or the fake)
+src/monitor.js                    refresh cycle: Firefly III → devices, states, scene triggers
+src/firefly.js                    Firefly III API client (GET only, paged) and parsing
+src/http.js                       the one network call (node:http/https, self-signed on demand)
+src/devices.js                    devices per account, budget, bill, piggy bank, summary
+src/actions.js                    scene actions read_balances/budgets/bills; config action check_now
+src/widgets.js                    dashboard widget `overview` (status + card-list)
+src/texts.js                      texts of the container in en/fr/de/es, number and date formats
 src/config.js                     DEFAULT_CONFIG (mirrors the manifest defaults) + normalization
-src/weather.js                    example driver (Open-Meteo)
+src/store.js                      /data/firefly.json: scene triggers already fired (atomic)
 gladys-assistant-integration.json manifest: name, config_schema, actions, image...
-docs/en.md, docs/fr.md            user documentation, re-hosted by Gladys (mandatory)
-test/                             node --test, against the SDK's fake Gladys (integration-sdk/testing)
+docs/{en,fr,de,es}.md             user documentation, re-hosted by Gladys (en and fr mandatory)
+test/                             node --test, against the SDK's fake Gladys and a fake Firefly III
+test/fixtures/firefly/            real answers of Firefly III 6.7.9, anonymized
 .github/scripts/release.mjs       release helpers (manifest bump, changelog), tested in test/
 ```
 
@@ -70,8 +75,9 @@ test/                             node --test, against the SDK's fake Gladys (in
   `type: "provider"`: 5.1.0). `test/manifest.test.js` ties the manifest to the
   code (defaults, action, scene and widget handlers): change both sides
   together.
-- **User-facing text** is bilingual (English and French): action messages,
-  manifest texts, and `docs/en.md` / `docs/fr.md`, kept in sync.
+- **User-facing text** exists in English, French, German and Spanish: action
+  messages, manifest texts, feature names, widget texts and
+  `docs/{en,fr,de,es}.md`, kept in sync (`test/i18n.test.js`).
 - **Style.** Prettier formats, ESLint catches mistakes. Comments explain why,
   in English. Tests never touch the network.
 
@@ -233,3 +239,29 @@ long, et sur un « Sie »/« Ihr… » de politesse en allemand. Le store exige 
 - Docs `en`, `fr`, `de`, `es` avec les mêmes sections.
 - Chauffe, ouverture, sécurité : ne rien rendre pilotable « comme un thermostat » ou par un assistant
   vocal quand une erreur serait dangereuse (leçon d'OctoPrint).
+
+## Firefly III (cette intégration)
+
+- **API** : REST `/api/v1`, jeton d'accès personnel en `Authorization: Bearer`, GET seulement. Réponses
+  enregistrées sur Firefly III 6.7.9 (`test/fixtures/firefly`). Montants en chaînes (`"884.950000000000"`),
+  dépenses négatives (`spent[].sum`), listes paginées (`meta.pagination.total_pages`).
+- **Budgets** : `budgets?start&end` donne les dépenses du mois (`spent`, tableau par devise) ;
+  `budget-limits?start=<jour>&end=<jour+1>` donne les plafonds qui couvrent aujourd'hui, avec ce qui a été
+  dépensé **dans leur propre période** (semaine, mois…). `start` doit être strictement avant `end` (422
+  sinon). Un budget sans `currency_code` (pas de réglage de devise) prend `primary_currency_code`.
+- **Factures** : `next_expected_match` n'est calculé que dans la fenêtre `start`/`end` de la requête. Avec le
+  mois en cours, une facture déjà payée ou annuelle répond `null` : on demande `start=<aujourd'hui>`,
+  `end=<+366 jours>`, avec `pay_dates[0]` en repli. Une facture créée par l'API sans `active` est
+  **inactive** ; les inactives sont écartées. Les factures en retard ne sont pas signalées.
+- **Tirelires** : `target_amount: "0"` veut dire « pas d'objectif » (`percentage: null`).
+- **Synthèse** : `summary/basic` répond un objet `<métrique>-in-<DEVISE>` ; seules `net-worth`, `spent`,
+  `earned`, `left-to-spend`, `bills-unpaid` sont gardées, un appareil par devise.
+- **Instance de test** : `fireflyiii/core` + MariaDB ; utilisateur créé par le formulaire `/register` ; le
+  jeton personnel par `POST /oauth/personal-access-tokens` (session + `X-XSRF-TOKEN`), après
+  `php artisan passport:install` (pas de `tinker` dans l'image).
+- **Choix** : seuls les appareils ajoutés dans Gladys sont suivis (états, widget, déclencheurs, actions) :
+  l'onglet Découverte sert de sélection. Le seuil de solde passe par le déclencheur standard « Changement
+  d'état de l'appareil ». Le premier seuil de budget vu sert de point de départ ; une facture se déclenche le
+  jour exact de chaque palier (0, 1, 2, 3, 7 jours).
+- **Confidentialité** : aucun montant, nom, IBAN, jeton ni adresse dans les journaux, même en debug
+  (`test/logs.test.js`) ; pas d'IBAN dans les appareils.
