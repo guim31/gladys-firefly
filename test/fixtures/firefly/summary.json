@@ -1,0 +1,91 @@
+{
+  "balance-in-EUR": {
+    "key": "balance-in-EUR",
+    "title": "Balance (€)",
+    "monetary_value": "884.950000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "€884.95",
+    "sub_title": "-€1,415.05 + €2,300.00"
+  },
+  "spent-in-EUR": {
+    "key": "spent-in-EUR",
+    "title": "Spent (€)",
+    "monetary_value": "-1415.050000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "-€1,415.05",
+    "sub_title": ""
+  },
+  "earned-in-EUR": {
+    "key": "earned-in-EUR",
+    "title": "Earned (€)",
+    "monetary_value": "2300.000000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "€2,300.00",
+    "sub_title": ""
+  },
+  "bills-paid-in-EUR": {
+    "key": "bills-paid-in-EUR",
+    "title": "Subscriptions paid (€)",
+    "monetary_value": "850.000000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "€850.00",
+    "sub_title": ""
+  },
+  "bills-unpaid-in-EUR": {
+    "key": "bills-unpaid-in-EUR",
+    "title": "Subscriptions unpaid (€)",
+    "monetary_value": "-32.490000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "-€32.49",
+    "sub_title": ""
+  },
+  "left-to-spend-in-EUR": {
+    "key": "left-to-spend-in-EUR",
+    "title": "Left to spend (€)",
+    "no_available_budgets": false,
+    "monetary_value": "34.950000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "€34.95",
+    "sub_title": "€2.18"
+  },
+  "net-worth-in-EUR": {
+    "key": "net-worth-in-EUR",
+    "title": "Net worth (€)",
+    "monetary_value": "11384.950000000000",
+    "currency_id": "1",
+    "currency_code": "EUR",
+    "currency_symbol": "€",
+    "currency_decimal_places": 2,
+    "value_parsed": "€11,384.95",
+    "sub_title": ""
+  },
+  "net-worth-in-USD": {
+    "key": "net-worth-in-USD",
+    "title": "Net worth ($)",
+    "monetary_value": "1200.000000000000",
+    "currency_id": "12",
+    "currency_code": "USD",
+    "currency_symbol": "$",
+    "currency_decimal_places": 2,
+    "value_parsed": "$1,200.00",
+    "sub_title": ""
+  }
+}

@@ -1,177 +1,715 @@
 {
   "manifest_version": 1,
   "type": "device",
-  "name": "Demo Devices Template",
+  "name": "Firefly III",
   "description": {
-    "en": "Starter template showing sensors, a switch, a dimmable light and a smart plug.",
-    "fr": "Template de démarrage : capteurs, interrupteur, lampe variable et prise connectée."
+    "en": "Balances, budgets, bills and piggy banks of your Firefly III in Gladys.",
+    "fr": "Soldes, budgets, factures et tirelires de votre Firefly III dans Gladys.",
+    "de": "Kontostände, Budgets, Rechnungen und Sparschweine deines Firefly III in Gladys.",
+    "es": "Saldos, presupuestos, facturas y huchas de su Firefly III en Gladys."
   },
   "version": "1.0.0",
-  "docker_image": "ghcr.io/gladysassistant/integration-template-js:1.0.0",
+  "docker_image": "ghcr.io/guim31/gladys-firefly:1.0.0",
   "gladys_version": ">=5.1.0",
-  "cover_image": "https://raw.githubusercontent.com/GladysAssistant/integration-template-js/master/cover.png",
-  "categories": ["lighting", "security", "environment"],
-  "transports": ["local", "cloud"],
+  "cover_image": "https://raw.githubusercontent.com/guim31/gladys-firefly/main/cover.png",
+  "categories": ["services"],
+  "transports": ["local"],
   "config_schema": [
     {
       "key": "intro",
       "type": "section",
-      "label": { "en": "Getting started", "fr": "Pour commencer" },
+      "label": {
+        "en": "Connection to Firefly III",
+        "fr": "Connexion à Firefly III",
+        "de": "Verbindung zu Firefly III",
+        "es": "Conexión con Firefly III"
+      },
       "description": {
-        "en": "The demo weather station reads real data from the free Open-Meteo API: pick the coordinates to observe. No account, no API key.",
-        "fr": "La station météo de démonstration lit de vraies données via l'API gratuite Open-Meteo : choisissez les coordonnées à observer. Pas de compte, pas de clé d'API."
+        "en": "In Firefly III, open Options → Profile → OAuth, create a personal access token and paste it below with the address of Firefly III. Then add the accounts, budgets and bills you want in the Discover tab.",
+        "fr": "Dans Firefly III, ouvrez Options → Profil → OAuth, créez un jeton d'accès personnel et collez-le ci-dessous avec l'adresse de Firefly III. Ajoutez ensuite les comptes, budgets et factures voulus dans l'onglet Découverte.",
+        "de": "Öffne in Firefly III Optionen → Profil → OAuth, erstelle ein persönliches Zugriffstoken und füge es unten mit der Adresse von Firefly III ein. Füge dann die gewünschten Konten, Budgets und Rechnungen im Tab „Entdecken“ hinzu.",
+        "es": "En Firefly III, abra Opciones → Perfil → OAuth, cree un token de acceso personal y péguelo abajo con la dirección de Firefly III. Después añada las cuentas, presupuestos y facturas que desee en la pestaña Descubrir."
       },
       "links": [
         {
-          "url": "https://open-meteo.com/en/docs",
-          "label": { "en": "Open-Meteo documentation", "fr": "Documentation Open-Meteo" }
+          "url": "https://github.com/guim31/gladys-firefly/blob/main/docs/en.md",
+          "label": {
+            "en": "Setup guide",
+            "fr": "Guide d'installation",
+            "de": "Installationsanleitung",
+            "es": "Guía de instalación"
+          }
+        },
+        {
+          "url": "https://docs.firefly-iii.org/how-to/firefly-iii/features/api/",
+          "label": {
+            "en": "Firefly III API tokens",
+            "fr": "Jetons d'API de Firefly III",
+            "de": "API-Tokens von Firefly III",
+            "es": "Tokens de API de Firefly III"
+          }
         }
       ]
     },
     {
-      "key": "latitude",
-      "type": "number",
-      "label": { "en": "Latitude", "fr": "Latitude" },
-      "description": {
-        "en": "Latitude used for the demo weather sensor.",
-        "fr": "Latitude utilisée par le capteur météo de démonstration."
+      "key": "url",
+      "type": "string",
+      "label": {
+        "en": "Address of Firefly III",
+        "fr": "Adresse de Firefly III",
+        "de": "Adresse von Firefly III",
+        "es": "Dirección de Firefly III"
       },
-      "placeholder": { "en": "e.g. 48.8566", "fr": "ex. 48.8566" },
+      "description": {
+        "en": "The address you open Firefly III with, reachable from Gladys.",
+        "fr": "L'adresse à laquelle vous ouvrez Firefly III, joignable depuis Gladys.",
+        "de": "Die Adresse, unter der du Firefly III öffnest, von Gladys aus erreichbar.",
+        "es": "La dirección con la que abre Firefly III, accesible desde Gladys."
+      },
+      "placeholder": {
+        "en": "e.g. http://192.168.1.20:8080",
+        "fr": "ex. http://192.168.1.20:8080",
+        "de": "z. B. http://192.168.1.20:8080",
+        "es": "p. ej. http://192.168.1.20:8080"
+      },
       "required": true,
-      "default": 48.8566,
-      "min": -90,
-      "max": 90
+      "default": ""
     },
     {
-      "key": "longitude",
-      "type": "number",
-      "label": { "en": "Longitude", "fr": "Longitude" },
-      "description": {
-        "en": "Longitude used for the demo weather sensor.",
-        "fr": "Longitude utilisée par le capteur météo de démonstration."
+      "key": "token",
+      "type": "secret",
+      "label": {
+        "en": "Personal access token",
+        "fr": "Jeton d'accès personnel",
+        "de": "Persönliches Zugriffstoken",
+        "es": "Token de acceso personal"
       },
-      "placeholder": { "en": "e.g. 2.3522", "fr": "ex. 2.3522" },
-      "required": true,
-      "default": 2.3522,
-      "min": -180,
-      "max": 180
+      "description": {
+        "en": "Read only by this integration: it never writes to Firefly III. Stored by Gladys, never written to the logs.",
+        "fr": "Lu seulement par cette intégration : elle n'écrit jamais dans Firefly III. Gardé par Gladys, jamais écrit dans les journaux.",
+        "de": "Wird nur von dieser Integration gelesen, die nie in Firefly III schreibt. Von Gladys gespeichert, nie in die Protokolle geschrieben.",
+        "es": "Solo lo lee esta integración: nunca escribe en Firefly III. Guardado por Gladys, nunca escrito en los registros."
+      },
+      "required": true
     },
     {
-      "key": "unit",
-      "type": "select",
-      "label": { "en": "Temperature unit", "fr": "Unité de température" },
+      "key": "allow_self_signed",
+      "type": "boolean",
+      "label": {
+        "en": "Accept a self-signed certificate",
+        "fr": "Accepter un certificat auto-signé",
+        "de": "Selbstsigniertes Zertifikat akzeptieren",
+        "es": "Aceptar un certificado autofirmado"
+      },
+      "description": {
+        "en": "Only for an https address whose certificate you made yourself.",
+        "fr": "Seulement pour une adresse https dont vous avez fait le certificat vous-même.",
+        "de": "Nur für eine https-Adresse, deren Zertifikat du selbst erstellt hast.",
+        "es": "Solo para una dirección https cuyo certificado haya creado usted mismo."
+      },
       "required": false,
-      "default": "celsius",
+      "default": false
+    },
+    {
+      "key": "refresh_interval",
+      "type": "select",
+      "label": {
+        "en": "Refresh interval",
+        "fr": "Fréquence de mise à jour",
+        "de": "Aktualisierungsintervall",
+        "es": "Intervalo de actualización"
+      },
+      "description": {
+        "en": "How often Firefly III is read. Your money does not move by the second: 15 minutes is plenty.",
+        "fr": "Fréquence de lecture de Firefly III. Votre argent ne bouge pas à la seconde : 15 minutes suffisent.",
+        "de": "Wie oft Firefly III gelesen wird. Dein Geld bewegt sich nicht sekündlich: 15 Minuten reichen.",
+        "es": "Frecuencia de lectura de Firefly III. Su dinero no se mueve cada segundo: 15 minutos bastan."
+      },
+      "required": false,
+      "default": "15",
       "options": [
-        { "value": "celsius", "label": { "en": "Celsius", "fr": "Celsius" } },
-        { "value": "fahrenheit", "label": { "en": "Fahrenheit", "fr": "Fahrenheit" } }
+        {
+          "value": "5",
+          "label": {
+            "en": "5 minutes",
+            "fr": "5 minutes",
+            "de": "5 Minuten",
+            "es": "5 minutos"
+          }
+        },
+        {
+          "value": "10",
+          "label": {
+            "en": "10 minutes",
+            "fr": "10 minutes",
+            "de": "10 Minuten",
+            "es": "10 minutos"
+          }
+        },
+        {
+          "value": "15",
+          "label": {
+            "en": "15 minutes",
+            "fr": "15 minutes",
+            "de": "15 Minuten",
+            "es": "15 minutos"
+          }
+        },
+        {
+          "value": "30",
+          "label": {
+            "en": "30 minutes",
+            "fr": "30 minutes",
+            "de": "30 Minuten",
+            "es": "30 minutos"
+          }
+        },
+        {
+          "value": "60",
+          "label": {
+            "en": "60 minutes",
+            "fr": "60 minutes",
+            "de": "60 Minuten",
+            "es": "60 minutos"
+          }
+        }
       ]
     },
     {
-      "key": "poll_frequency",
-      "type": "number",
-      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the texts",
+        "fr": "Langue des textes",
+        "de": "Sprache der Texte",
+        "es": "Idioma de los textos"
+      },
       "description": {
-        "en": "How often sensors are polled, in seconds (one minute minimum).",
-        "fr": "Fréquence d'interrogation des capteurs, en secondes (une minute minimum)."
+        "en": "Names of the features (at their creation) and texts sent to the scenes.",
+        "fr": "Noms des fonctionnalités (à leur création) et textes envoyés aux scènes.",
+        "de": "Namen der Funktionen (bei ihrer Erstellung) und Texte für die Szenen.",
+        "es": "Nombres de las funciones (al crearlas) y textos enviados a las escenas."
       },
       "required": false,
-      "default": 300,
-      "min": 60,
-      "max": 3600
+      "default": "fr",
+      "options": [
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        }
+      ]
     }
   ],
   "actions": [
     {
-      "key": "test_weather",
-      "label": { "en": "Test the weather provider", "fr": "Tester le fournisseur météo" },
-      "timeout_seconds": 30
-    },
-    {
-      "key": "identify",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "fields": [
-        {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
-        }
-      ]
+      "key": "check_now",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 60
     }
   ],
   "scene_triggers": [
     {
-      "key": "motion_detected",
-      "label": { "en": "Motion detected", "fr": "Mouvement détecté" },
+      "key": "bill_due",
+      "label": {
+        "en": "Firefly III: bill due soon",
+        "fr": "Firefly III : facture à échéance",
+        "de": "Firefly III: Rechnung bald fällig",
+        "es": "Firefly III: factura próxima"
+      },
       "description": {
-        "en": "A demo motion sensor saw a person or an animal move.",
-        "fr": "Un détecteur de démonstration a vu bouger une personne ou un animal."
+        "en": "A bill of Firefly III is expected in the chosen number of days. Once per bill, due date and number of days.",
+        "fr": "Une facture de Firefly III est attendue dans le nombre de jours choisi. Une fois par facture, échéance et nombre de jours.",
+        "de": "Eine Rechnung von Firefly III wird in der gewählten Anzahl Tage erwartet. Einmal pro Rechnung, Fälligkeit und Anzahl Tage.",
+        "es": "Se espera una factura de Firefly III en el número de días elegido. Una vez por factura, vencimiento y número de días."
       },
       "fields": [
         {
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Sensor", "fr": "Détecteur" }
+          "label": {
+            "en": "Bill",
+            "fr": "Facture",
+            "de": "Rechnung",
+            "es": "Factura"
+          }
         },
         {
-          "key": "target",
-          "type": "multi_select",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" },
+          "key": "days",
+          "type": "select",
+          "required": true,
+          "default": "3",
+          "label": {
+            "en": "Due in",
+            "fr": "Échéance dans",
+            "de": "Fällig in",
+            "es": "Vence en"
+          },
           "options": [
-            { "value": "person", "label": { "en": "Person", "fr": "Personne" } },
-            { "value": "animal", "label": { "en": "Animal", "fr": "Animal" } }
+            {
+              "value": "0",
+              "label": {
+                "en": "The day itself",
+                "fr": "Le jour même",
+                "de": "Am selben Tag",
+                "es": "El mismo día"
+              }
+            },
+            {
+              "value": "1",
+              "label": {
+                "en": "1 day",
+                "fr": "1 jour",
+                "de": "1 Tag",
+                "es": "1 día"
+              }
+            },
+            {
+              "value": "2",
+              "label": {
+                "en": "2 days",
+                "fr": "2 jours",
+                "de": "2 Tage",
+                "es": "2 días"
+              }
+            },
+            {
+              "value": "3",
+              "label": {
+                "en": "3 days",
+                "fr": "3 jours",
+                "de": "3 Tage",
+                "es": "3 días"
+              }
+            },
+            {
+              "value": "7",
+              "label": {
+                "en": "7 days",
+                "fr": "7 jours",
+                "de": "7 Tage",
+                "es": "7 días"
+              }
+            }
           ]
         }
       ],
       "variables": [
         {
-          "key": "target",
+          "key": "name",
           "type": "string",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" }
+          "label": {
+            "en": "Bill name",
+            "fr": "Nom de la facture",
+            "de": "Name der Rechnung",
+            "es": "Nombre de la factura"
+          }
+        },
+        {
+          "key": "amount",
+          "type": "number",
+          "label": {
+            "en": "Expected amount",
+            "fr": "Montant prévu",
+            "de": "Erwarteter Betrag",
+            "es": "Importe previsto"
+          }
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "label": {
+            "en": "Currency (EUR, USD…)",
+            "fr": "Devise (EUR, USD…)",
+            "de": "Währung (EUR, USD…)",
+            "es": "Divisa (EUR, USD…)"
+          }
+        },
+        {
+          "key": "due_date",
+          "type": "string",
+          "label": {
+            "en": "Due date (YYYY-MM-DD)",
+            "fr": "Échéance (AAAA-MM-JJ)",
+            "de": "Fälligkeit (JJJJ-MM-TT)",
+            "es": "Vencimiento (AAAA-MM-DD)"
+          }
+        },
+        {
+          "key": "text",
+          "type": "string",
+          "label": {
+            "en": "Sentence to send or read",
+            "fr": "Phrase à envoyer ou à lire",
+            "de": "Satz zum Senden oder Vorlesen",
+            "es": "Frase para enviar o leer"
+          }
+        }
+      ]
+    },
+    {
+      "key": "budget_threshold",
+      "label": {
+        "en": "Firefly III: budget level reached",
+        "fr": "Firefly III : seuil de budget atteint",
+        "de": "Firefly III: Budgetschwelle erreicht",
+        "es": "Firefly III: umbral de presupuesto alcanzado"
+      },
+      "description": {
+        "en": "The spending of a budget reaches the chosen share of its amount (100 %: budget used up or exceeded). Once per level and per period.",
+        "fr": "Les dépenses d'un budget atteignent la part choisie de son montant (100 % : budget épuisé ou dépassé). Une fois par seuil et par période.",
+        "de": "Die Ausgaben eines Budgets erreichen den gewählten Anteil seines Betrags (100 %: Budget aufgebraucht oder überschritten). Einmal pro Schwelle und Zeitraum.",
+        "es": "El gasto de un presupuesto alcanza la parte elegida de su importe (100 %: presupuesto agotado o superado). Una vez por umbral y por periodo."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Budget",
+            "fr": "Budget",
+            "de": "Budget",
+            "es": "Presupuesto"
+          }
+        },
+        {
+          "key": "level",
+          "type": "select",
+          "required": true,
+          "default": "90",
+          "label": {
+            "en": "Level reached",
+            "fr": "Seuil atteint",
+            "de": "Erreichte Schwelle",
+            "es": "Umbral alcanzado"
+          },
+          "options": [
+            {
+              "value": "50",
+              "label": {
+                "en": "50 %",
+                "fr": "50 %",
+                "de": "50 %",
+                "es": "50 %"
+              }
+            },
+            {
+              "value": "75",
+              "label": {
+                "en": "75 %",
+                "fr": "75 %",
+                "de": "75 %",
+                "es": "75 %"
+              }
+            },
+            {
+              "value": "90",
+              "label": {
+                "en": "90 %",
+                "fr": "90 %",
+                "de": "90 %",
+                "es": "90 %"
+              }
+            },
+            {
+              "value": "100",
+              "label": {
+                "en": "100 %",
+                "fr": "100 %",
+                "de": "100 %",
+                "es": "100 %"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Budget name",
+            "fr": "Nom du budget",
+            "de": "Name des Budgets",
+            "es": "Nombre del presupuesto"
+          }
+        },
+        {
+          "key": "spent",
+          "type": "number",
+          "label": {
+            "en": "Spent",
+            "fr": "Dépensé",
+            "de": "Ausgegeben",
+            "es": "Gastado"
+          }
+        },
+        {
+          "key": "limit",
+          "type": "number",
+          "label": {
+            "en": "Budgeted",
+            "fr": "Budgété",
+            "de": "Budgetiert",
+            "es": "Presupuestado"
+          }
+        },
+        {
+          "key": "percent",
+          "type": "number",
+          "label": {
+            "en": "Budget used (%)",
+            "fr": "Budget consommé (%)",
+            "de": "Budget verbraucht (%)",
+            "es": "Presupuesto consumido (%)"
+          }
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "label": {
+            "en": "Currency (EUR, USD…)",
+            "fr": "Devise (EUR, USD…)",
+            "de": "Währung (EUR, USD…)",
+            "es": "Divisa (EUR, USD…)"
+          }
+        },
+        {
+          "key": "text",
+          "type": "string",
+          "label": {
+            "en": "Sentence to send or read",
+            "fr": "Phrase à envoyer ou à lire",
+            "de": "Satz zum Senden oder Vorlesen",
+            "es": "Frase para enviar o leer"
+          }
         }
       ]
     }
   ],
   "scene_actions": [
     {
-      "key": "identify_device",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "description": {
-        "en": "Make a device signal itself (the demo light blinks).",
-        "fr": "Fait se signaler un appareil (la lampe de démonstration clignote)."
+      "key": "read_balances",
+      "label": {
+        "en": "Firefly III: read the balances",
+        "fr": "Firefly III : lire les soldes",
+        "de": "Firefly III: Kontostände lesen",
+        "es": "Firefly III: leer los saldos"
       },
-      "timeout_seconds": 15,
+      "description": {
+        "en": "The balance of every account added to Gladys, as a sentence to send by message or read aloud.",
+        "fr": "Le solde de chaque compte ajouté à Gladys, en une phrase à envoyer par message ou à lire à voix haute.",
+        "de": "Der Stand jedes zu Gladys hinzugefügten Kontos, als Satz zum Senden per Nachricht oder zum Vorlesen.",
+        "es": "El saldo de cada cuenta añadida a Gladys, en una frase para enviar por mensaje o leer en voz alta."
+      },
+      "timeout_seconds": 60,
+      "outputs": [
+        {
+          "key": "text",
+          "type": "string",
+          "label": {
+            "en": "Sentence to send or read",
+            "fr": "Phrase à envoyer ou à lire",
+            "de": "Satz zum Senden oder Vorlesen",
+            "es": "Frase para enviar o leer"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Number of accounts",
+            "fr": "Nombre de comptes",
+            "de": "Anzahl der Konten",
+            "es": "Número de cuentas"
+          }
+        }
+      ]
+    },
+    {
+      "key": "read_budgets",
+      "label": {
+        "en": "Firefly III: read the budgets",
+        "fr": "Firefly III : lire les budgets",
+        "de": "Firefly III: Budgets lesen",
+        "es": "Firefly III: leer los presupuestos"
+      },
+      "description": {
+        "en": "What every budget added to Gladys has spent of its amount, as one text.",
+        "fr": "Ce que chaque budget ajouté à Gladys a dépensé de son montant, en un texte.",
+        "de": "Was jedes zu Gladys hinzugefügte Budget von seinem Betrag ausgegeben hat, als ein Text.",
+        "es": "Lo que cada presupuesto añadido a Gladys ha gastado de su importe, en un texto."
+      },
+      "timeout_seconds": 60,
+      "outputs": [
+        {
+          "key": "text",
+          "type": "string",
+          "label": {
+            "en": "Sentence to send or read",
+            "fr": "Phrase à envoyer ou à lire",
+            "de": "Satz zum Senden oder Vorlesen",
+            "es": "Frase para enviar o leer"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Number of budgets",
+            "fr": "Nombre de budgets",
+            "de": "Anzahl der Budgets",
+            "es": "Número de presupuestos"
+          }
+        },
+        {
+          "key": "over_count",
+          "type": "number",
+          "label": {
+            "en": "Budgets used up",
+            "fr": "Budgets épuisés",
+            "de": "Aufgebrauchte Budgets",
+            "es": "Presupuestos agotados"
+          }
+        }
+      ]
+    },
+    {
+      "key": "read_bills",
+      "label": {
+        "en": "Firefly III: read the next bills",
+        "fr": "Firefly III : lire les prochaines factures",
+        "de": "Firefly III: nächste Rechnungen lesen",
+        "es": "Firefly III: leer las próximas facturas"
+      },
+      "description": {
+        "en": "The bills of Firefly III expected in the next days, with their amount, as one text.",
+        "fr": "Les factures de Firefly III attendues dans les prochains jours, avec leur montant, en un texte.",
+        "de": "Die in den nächsten Tagen erwarteten Rechnungen von Firefly III mit Betrag, als ein Text.",
+        "es": "Las facturas de Firefly III previstas en los próximos días, con su importe, en un texto."
+      },
+      "timeout_seconds": 60,
       "fields": [
         {
-          "key": "device",
+          "key": "days",
           "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
+          "required": true,
+          "default": "7",
+          "label": {
+            "en": "Within",
+            "fr": "Dans les",
+            "de": "Innerhalb von",
+            "es": "En los próximos"
+          },
+          "options": [
+            {
+              "value": "7",
+              "label": {
+                "en": "7 days",
+                "fr": "7 jours",
+                "de": "7 Tagen",
+                "es": "7 días"
+              }
+            },
+            {
+              "value": "14",
+              "label": {
+                "en": "14 days",
+                "fr": "14 jours",
+                "de": "14 Tagen",
+                "es": "14 días"
+              }
+            },
+            {
+              "value": "31",
+              "label": {
+                "en": "31 days",
+                "fr": "31 jours",
+                "de": "31 Tagen",
+                "es": "31 días"
+              }
+            }
+          ]
         }
       ],
       "outputs": [
         {
-          "key": "signalled",
-          "type": "boolean",
-          "label": { "en": "Device signalled", "fr": "Appareil signalé" }
+          "key": "text",
+          "type": "string",
+          "label": {
+            "en": "Sentence to send or read",
+            "fr": "Phrase à envoyer ou à lire",
+            "de": "Satz zum Senden oder Vorlesen",
+            "es": "Frase para enviar o leer"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Number of bills",
+            "fr": "Nombre de factures",
+            "de": "Anzahl der Rechnungen",
+            "es": "Número de facturas"
+          }
         }
       ]
     }
   ],
   "widgets": [
     {
-      "key": "demo_status",
-      "label": { "en": "Demo status", "fr": "État de la démo" },
-      "description": {
-        "en": "Live temperature and plug power, plug connection and observed location.",
-        "fr": "Température et puissance en direct, connexion de la prise, position observée."
+      "key": "overview",
+      "label": {
+        "en": "Firefly III overview",
+        "fr": "Aperçu Firefly III",
+        "de": "Firefly-III-Übersicht",
+        "es": "Resumen de Firefly III"
       },
-      "icon": "activity",
-      "action_timeout_seconds": 15
+      "description": {
+        "en": "Balances of your accounts and budgets of the month, from Firefly III.",
+        "fr": "Soldes de vos comptes et budgets du mois, depuis Firefly III.",
+        "de": "Kontostände und Budgets des Monats aus Firefly III.",
+        "es": "Saldos de sus cuentas y presupuestos del mes, desde Firefly III."
+      },
+      "icon": "dollar-sign"
     }
   ]
 }

@@ -1,0 +1,228 @@
+{
+  "data": [
+    {
+      "type": "budgets",
+      "id": "1",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:22+02:00",
+        "updated_at": "2026-10-16T15:43:22+02:00",
+        "active": true,
+        "name": "Courses",
+        "order": 1,
+        "notes": null,
+        "auto_budget_type": null,
+        "auto_budget_period": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "object_has_currency_setting": false,
+        "currency_id": null,
+        "currency_code": null,
+        "currency_name": null,
+        "currency_symbol": null,
+        "currency_decimal_places": null,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "auto_budget_amount": null,
+        "pc_auto_budget_amount": null,
+        "spent": [
+          {
+            "sum": "-382.55",
+            "currency_id": 1,
+            "currency_name": "Euro",
+            "currency_symbol": "€",
+            "currency_code": "EUR",
+            "currency_decimal_places": 2
+          }
+        ],
+        "pc_spent": [
+          {
+            "sum": "-382.55",
+            "currency_id": 1,
+            "currency_name": "Euro",
+            "currency_symbol": "€",
+            "currency_code": "EUR",
+            "currency_decimal_places": 2
+          }
+        ]
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/budgets/1",
+        "0": {
+          "rel": "self",
+          "uri": "/budgets/1"
+        }
+      }
+    },
+    {
+      "type": "budgets",
+      "id": "2",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:22+02:00",
+        "updated_at": "2026-10-16T15:43:22+02:00",
+        "active": true,
+        "name": "Loisirs",
+        "order": 2,
+        "notes": null,
+        "auto_budget_type": null,
+        "auto_budget_period": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "object_has_currency_setting": false,
+        "currency_id": null,
+        "currency_code": null,
+        "currency_name": null,
+        "currency_symbol": null,
+        "currency_decimal_places": null,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "auto_budget_amount": null,
+        "pc_auto_budget_amount": null,
+        "spent": [
+          {
+            "sum": "-160.00",
+            "currency_id": 1,
+            "currency_name": "Euro",
+            "currency_symbol": "€",
+            "currency_code": "EUR",
+            "currency_decimal_places": 2
+          }
+        ],
+        "pc_spent": [
+          {
+            "sum": "-160.00",
+            "currency_id": 1,
+            "currency_name": "Euro",
+            "currency_symbol": "€",
+            "currency_code": "EUR",
+            "currency_decimal_places": 2
+          }
+        ]
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/budgets/2",
+        "0": {
+          "rel": "self",
+          "uri": "/budgets/2"
+        }
+      }
+    },
+    {
+      "type": "budgets",
+      "id": "3",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:22+02:00",
+        "updated_at": "2026-10-16T15:43:22+02:00",
+        "active": true,
+        "name": "Transport",
+        "order": 3,
+        "notes": null,
+        "auto_budget_type": null,
+        "auto_budget_period": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "object_has_currency_setting": false,
+        "currency_id": null,
+        "currency_code": null,
+        "currency_name": null,
+        "currency_symbol": null,
+        "currency_decimal_places": null,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "auto_budget_amount": null,
+        "pc_auto_budget_amount": null,
+        "spent": [
+          {
+            "sum": "-22.50",
+            "currency_id": 1,
+            "currency_name": "Euro",
+            "currency_symbol": "€",
+            "currency_code": "EUR",
+            "currency_decimal_places": 2
+          }
+        ],
+        "pc_spent": [
+          {
+            "sum": "-22.50",
+            "currency_id": 1,
+            "currency_name": "Euro",
+            "currency_symbol": "€",
+            "currency_code": "EUR",
+            "currency_decimal_places": 2
+          }
+        ]
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/budgets/3",
+        "0": {
+          "rel": "self",
+          "uri": "/budgets/3"
+        }
+      }
+    },
+    {
+      "type": "budgets",
+      "id": "4",
+      "attributes": {
+        "created_at": "2026-10-16T15:43:22+02:00",
+        "updated_at": "2026-10-16T15:43:22+02:00",
+        "active": true,
+        "name": "Divers",
+        "order": 4,
+        "notes": null,
+        "auto_budget_type": null,
+        "auto_budget_period": null,
+        "object_group_id": null,
+        "object_group_order": null,
+        "object_group_title": null,
+        "object_has_currency_setting": false,
+        "currency_id": null,
+        "currency_code": null,
+        "currency_name": null,
+        "currency_symbol": null,
+        "currency_decimal_places": null,
+        "primary_currency_id": "1",
+        "primary_currency_name": "Euro",
+        "primary_currency_code": "EUR",
+        "primary_currency_symbol": "€",
+        "primary_currency_decimal_places": 2,
+        "auto_budget_amount": null,
+        "pc_auto_budget_amount": null,
+        "spent": [],
+        "pc_spent": []
+      },
+      "links": {
+        "self": "http://192.0.2.10:8080/api/v1/budgets/4",
+        "0": {
+          "rel": "self",
+          "uri": "/budgets/4"
+        }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 4,
+      "count": 4,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 1
+    }
+  },
+  "links": {
+    "self": "http://192.0.2.10:8080/api/v1/budgets?start=2026-10-01&end=2026-10-31&limit=50&page=1",
+    "first": "http://192.0.2.10:8080/api/v1/budgets?start=2026-10-01&end=2026-10-31&limit=50&page=1",
+    "last": "http://192.0.2.10:8080/api/v1/budgets?start=2026-10-01&end=2026-10-31&limit=50&page=1"
+  }
+}

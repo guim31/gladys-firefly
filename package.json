@@ -1,8 +1,8 @@
 {
-  "name": "gladys-integration-template-js",
+  "name": "gladys-firefly",
   "version": "1.0.0",
   "private": true,
-  "description": "Official starter template to build an external integration for Gladys Assistant with the JavaScript SDK.",
+  "description": "Firefly III (personal finances) in Gladys Assistant: balances, budgets, bills and piggy banks.",
   "type": "module",
   "main": "index.js",
   "scripts": {
