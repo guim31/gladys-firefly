@@ -30,6 +30,14 @@ Gladys before reporting a problem.
 
 In scope: the code of this repository and the Docker image it publishes.
 
+The integration holds a personal access token of Firefly III, which gives access to the whole
+account of its user. Gladys stores it with the configuration and passes it to the container; the
+integration only sends it to the address of Firefly III given in the configuration, never writes it
+to `/data` or to the logs, and only makes GET requests. Under `/data`, it keeps which scene triggers
+were fired (identifiers, dates and levels, no amount or name). It talks to Firefly III only, on the
+network of the user; certificate checks are skipped only when "Accept a self-signed certificate" is
+enabled.
+
 Out of scope: Gladys Assistant itself (see its
 [security policy](https://github.com/GladysAssistant/Gladys/security/policy)),
 and the third-party services and devices the integration talks to.

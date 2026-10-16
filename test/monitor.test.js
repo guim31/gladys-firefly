@@ -4,6 +4,9 @@
 // container's own timer, and what is kept under /data.
 // -----------------------------------------------------------------------------
 
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -109,7 +112,10 @@ test('the container reads Firefly III on its own timer, without onPoll', async (
   t.mock.timers.enable({ apis: ['setInterval'] });
   const api = createApi();
   const gladys = createFakeGladys({ config: { ...CONFIG, refresh_interval: '30' } });
-  const app = registerHandlers(gladys, { store: new Store(t.name), request: api.request });
+  const app = registerHandlers(gladys, {
+    store: new Store(mkdtempSync(join(tmpdir(), 'gladys-firefly-'))),
+    request: api.request,
+  });
   t.after(() => app.stop());
   await gladys.connect();
   await app.ready;
