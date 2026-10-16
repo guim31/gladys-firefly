@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-16
+
 ### Added
 
 - Firefly III in Gladys, read only, with a personal access token: one device per active asset
@@ -24,4 +26,5 @@ the notes of the version's GitHub Release.
   accepted on demand.
 - Texts and documentation in English, French, German and Spanish.
 
-[Unreleased]: https://github.com/guim31/gladys-firefly/commits/main
+[Unreleased]: https://github.com/guim31/gladys-firefly/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/guim31/gladys-firefly/releases/tag/v1.0.0
