@@ -8,8 +8,8 @@
     "de": "Kontostände, Budgets, Rechnungen und Sparschweine deines Firefly III in Gladys.",
     "es": "Saldos, presupuestos, facturas y huchas de su Firefly III en Gladys."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/guim31/gladys-firefly:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/guim31/gladys-firefly:1.0.1",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/guim31/gladys-firefly/main/cover.png",
   "categories": ["services"],

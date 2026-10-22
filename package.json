@@ -1,6 +1,6 @@
 {
   "name": "gladys-firefly",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Firefly III (personal finances) in Gladys Assistant: balances, budgets, bills and piggy banks.",
   "type": "module",
